@@ -10,26 +10,31 @@
         <table border="0" cellpadding="5">
             <tr>
                 <td>ID:</td>
-                <td><input type="number" th:field="*{user.id}" readonly/></td>
+                <td><input type="number" th:field="${user.id}" readonly/></td>
             </tr>
             <tr>
                 <td>Username:</td>
-                <td><input type="text" th:field="*{user.username}"/></td>
+                <td><input type="text" th:field="${user.username}"/></td>
             </tr>
             <tr>
                 <td>Last Name:</td>
-                <td><input type="text" th:field="*{user.lastName}"/></td>
+                <td><input type="text" th:field="${user.lastName}"/></td>
             </tr>
             <tr>
                 <td>Email:</td>
-                <td><input type="text" th:field="*{user.email}"/></td>
+                <td><input type="text" th:field="${user.email}"/></td>
             </tr>
             <tr>
                 <td>Password:</td>
-                <td><input type="text" th:field="*{user.password}"/></td>
+                <td><input type="text" th:field="${user.password}"/></td>
             </tr>
-            <input type="checkbox" name="checkBoxRoles" value="USER"/>USER
-            <input type="checkbox" name="checkBoxRoles" value="ADMIN"/>ADMIN
+            <tr>
+                <td th:each="role : ${allRoles}">
+                    <input type="checkbox" name="selectedRoles" th:value="${role.name}"
+                           th:text="${role.name}"
+                           th:checked="${#lists.contains(user.roles, role)}"/>
+                </td>
+            </tr>
             <br/>
         </table>
         <br/>

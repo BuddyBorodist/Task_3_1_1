@@ -9,6 +9,7 @@ public interface RoleService {
     List<Role> getAllRoles();
 
     void saveRole (Role Role);
+    void saveRoles(Iterable<Role> roles);
 
     void deleteRoleId(Long id);
 

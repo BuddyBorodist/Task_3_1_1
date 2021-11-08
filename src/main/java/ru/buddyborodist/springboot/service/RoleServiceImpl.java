@@ -28,6 +28,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public void saveRoles(Iterable<Role> roles) {
+        roleRepository.saveAll(roles);
+    }
+
+    @Override
     public void deleteRoleId(Long id) {
         roleRepository.deleteById(id);
     }

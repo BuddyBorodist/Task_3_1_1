@@ -11,6 +11,7 @@ import ru.buddyborodist.springboot.service.RoleService;
 import ru.buddyborodist.springboot.service.UserService;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -41,14 +42,14 @@ public class UserController {
     @GetMapping(value = "/admin/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "admin/new";
     }
 
     @PostMapping(value = "/admin/add-user")
-    public String addUser(@ModelAttribute User user, @RequestParam(value = "checkBoxRoles") String[] checkBoxRoles) {
+    public String addUser(@ModelAttribute User user, @RequestParam(value = "selectedRoles") String[] selectedRoles) {
         Set<Role> roleSet = new HashSet<>();
-        for (String role : checkBoxRoles) {
+        for (String role : selectedRoles) {
             roleSet.add(roleService.getRoleName(role));
         }
         user.setRoles(roleSet);
@@ -58,15 +59,16 @@ public class UserController {
 
     @GetMapping(value = "/edit/{id}")
     public String editUserForm(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.getUserId(id));
-        model.addAttribute("roles", roleService.getAllRoles());
+        Optional<User> user = userService.getUserId(id);
+        userService.getUserId(id).ifPresent(u -> model.addAttribute("user", u));
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "edit";
     }
 
     @PatchMapping(value = "/edit")
-    public String editUser(@ModelAttribute User user, @RequestParam(value = "checkBoxRoles") String[] checkBoxRoles) {
+    public String editUser(@ModelAttribute User user, @RequestParam(value = "selectedRoles") String[] selectedRoles) {
         Set<Role> roleSet = new HashSet<>();
-        for (String role : checkBoxRoles) {
+        for (String role : selectedRoles) {
             roleSet.add(roleService.getRoleName(role));
         }
         user.setRoles(roleSet);

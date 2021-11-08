@@ -26,8 +26,12 @@
                 <td>Password:</td>
                 <td><input type="text" th:field="*{password}"/></td>
             </tr>
-            <input type="checkbox" name="checkBoxRoles" value="USER"/>USER
-            <input type="checkbox" name="checkBoxRoles" value="ADMIN"/>ADMIN
+            <tr>
+                <td th:each="role : ${allRoles}">
+                    <input type="checkbox" name="selectedRoles" th:value="${role.name}"
+                           th:text="${role.name}"/>
+                </td>
+            </tr>
             <br/>
         </table>
         <br/>

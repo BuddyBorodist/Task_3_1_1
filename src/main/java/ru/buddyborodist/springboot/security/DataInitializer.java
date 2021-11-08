@@ -1,11 +1,10 @@
 package ru.buddyborodist.springboot.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.buddyborodist.springboot.dao.RoleRepository;
-import ru.buddyborodist.springboot.dao.UserRepository;
 import ru.buddyborodist.springboot.model.Role;
 import ru.buddyborodist.springboot.model.User;
+import ru.buddyborodist.springboot.service.RoleService;
+import ru.buddyborodist.springboot.service.UserService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -14,16 +13,14 @@ import java.util.Set;
 
 @Configuration
 public class DataInitializer {
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public DataInitializer(RoleService roleService, UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
     }
 
     @PostConstruct
@@ -36,18 +33,18 @@ public class DataInitializer {
         List<Role> roles = new ArrayList<>();
         roles.add(roleAdmin);
         roles.add(roleUser);
-        roleRepository.saveAll(roles);
+        roleService.saveRoles(roles);
     }
 
     @PostConstruct
     public void createUser(){
-        Role roleAdmin = roleRepository.getRoleByName("ADMIN");
-        Role roleUser = roleRepository.getRoleByName("USER");
+        Role roleAdmin = roleService.getRoleName("ADMIN");
+        Role roleUser = roleService.getRoleName("USER");
 
         User user = new User();
         user.setRoles(Set.of(roleAdmin, roleUser));
         user.setUsername("admin");
-        user.setPassword(passwordEncoder.encode("123"));
-        userRepository.save(user);
+        user.setPassword("123");
+        userService.saveUser(user);
     }
 }
